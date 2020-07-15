@@ -104,6 +104,7 @@
         android:textStyle="bold"
         ></Button>
     <LinearLayout
+        android:layout_marginBottom="20dp"
         android:id="@+id/logiScreen"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -124,7 +125,7 @@
             ></Button>
         <Button
             android:onClick="login"
-
+            android:layout_marginLeft="-20dp"
             android:id="@+id/logiScreen2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

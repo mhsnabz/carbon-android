@@ -84,6 +84,7 @@
 
     <LinearLayout
         android:id="@+id/fprgetPass"
+        android:layout_marginBottom="20dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -94,7 +95,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
-            android:text="Şifremi Unuttum !"
+            android:text="Forgot Password!"
             android:textAllCaps="false"
             android:textColor="@android:color/darker_gray"
             android:fontFamily="@font/nunito_semibold"
@@ -102,12 +103,12 @@
 
             ></Button>
         <Button
-            android:onClick="forgetPassword"
+
             android:id="@+id/fprgetPass2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
-            android:text=" Şifremi Sıfırla"
+            android:text=" Reset Your Password"
             android:textAllCaps="false"
             android:textColor="@color/maincolor"
             android:fontFamily="@font/nunito_semibold"
