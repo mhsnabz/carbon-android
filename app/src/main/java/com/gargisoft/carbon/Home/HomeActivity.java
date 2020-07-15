@@ -4,14 +4,17 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.HeaderViewListAdapter;
 import android.widget.TextView;
 
 import com.gargisoft.carbon.Adapter.HeaderListAdapter;
+import com.gargisoft.carbon.Adapter.ViewPagerAdapter;
 import com.gargisoft.carbon.Model.currentUser;
 import com.gargisoft.carbon.Model.discoverUser;
 import com.gargisoft.carbon.R;
@@ -39,6 +42,9 @@ public class HomeActivity extends AppCompatActivity {
 
     ArrayList<String> list;
     HeaderListAdapter adapter;
+    TextView headerLbl , friendLbl, discoverLbl;
+    ViewPager mainViewPager;
+    ViewPagerAdapter viewPagerAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,7 +55,30 @@ public class HomeActivity extends AppCompatActivity {
         headerFriend.setHasFixedSize(true);
 
         headerFriend.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+
         list = new ArrayList<>();
+
+        headerLbl = (TextView)findViewById(R.id.headerLbl);
+        friendLbl = (TextView)findViewById(R.id.friendLbl);
+        discoverLbl = (TextView)findViewById(R.id.discoverLbl);
+        mainViewPager = (ViewPager)findViewById(R.id.mainPager);
+
+        friendLbl.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mainViewPager.setCurrentItem(0);
+            }
+        });
+
+        discoverLbl.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                mainViewPager.setCurrentItem(1);
+            }
+        });
+        viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
+        mainViewPager.setAdapter(viewPagerAdapter);
         Bundle extras = getIntent().getExtras();
         Intent intentIncoming = getIntent();
         if (extras != null) {
@@ -71,10 +100,44 @@ public class HomeActivity extends AppCompatActivity {
         }
         getFriendList();
 
+        mainViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                changeTabs(position);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
     }
 
     private void setUserInfo(){
 
+    }
+
+    private void changeTabs(int position){
+        if (position == 0){
+            headerLbl.setText("Chats");
+            friendLbl.setTextSize(24);
+            friendLbl.setTextColor(getColor(R.color.colorPrimary));
+            discoverLbl.setTextSize(16);
+            discoverLbl.setTextColor(getColor(R.color.gray));
+        }
+        else if (position == 1){
+            headerLbl.setText("Discover");
+            friendLbl.setTextSize(16);
+            friendLbl.setTextColor(getColor(R.color.gray));
+            discoverLbl.setTextSize(24);
+            discoverLbl.setTextColor(getColor(R.color.colorPrimary));
+        }
     }
     private void getFriendList(){
         CollectionReference ref = FirebaseFirestore.getInstance().collection("user")
