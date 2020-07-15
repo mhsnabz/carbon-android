@@ -9,10 +9,10 @@ public class ChatListModel implements Parcelable {
 
     String senderUid,getterUid,senderProfileImage,lastMsg,name;
     long badge;
-    long time;
+
     Timestamp date;
 
-    public ChatListModel(String senderUid, String getterUid, String senderProfileImage, String lastMsg, String name, long badge, long time, Timestamp date) {
+    public ChatListModel(String senderUid, String getterUid, String senderProfileImage, String lastMsg, String name, long badge, Timestamp date) {
 
         this.senderUid = senderUid;
         this.getterUid = getterUid;
@@ -20,7 +20,7 @@ public class ChatListModel implements Parcelable {
         this.lastMsg = lastMsg;
         this.name = name;
         this.badge = badge;
-        this.time = time;
+
         this.date = date;
     }
 
@@ -34,7 +34,7 @@ public class ChatListModel implements Parcelable {
         lastMsg = in.readString();
         name = in.readString();
         badge = in.readLong();
-        time = in.readLong();
+
         date = in.readParcelable(Timestamp.class.getClassLoader());
     }
 
@@ -74,9 +74,6 @@ public class ChatListModel implements Parcelable {
         return badge;
     }
 
-    public long getTime() {
-        return time;
-    }
 
     public Timestamp getDate() {
         return date;
@@ -95,7 +92,7 @@ public class ChatListModel implements Parcelable {
         dest.writeString(lastMsg);
         dest.writeString(name);
         dest.writeLong(badge);
-        dest.writeLong(time);
+
         dest.writeParcelable(date, flags);
     }
 }
