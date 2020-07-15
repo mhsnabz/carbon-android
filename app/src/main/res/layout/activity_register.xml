@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".LoginRegister.RegisterActivity">
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/numberr"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:hint="Username"
+        android:textAlignment="center"
+        android:fontFamily="@font/nunito_semibold"
+        android:textSize="16dp"
+        android:inputType="textCapSentences"
+        app:met_floatingLabel="normal"
+        android:layout_marginTop="50dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginLeft="40dp"
+        />
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/namee"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:hint="Full Name"
+        android:textAlignment="center"
+        android:fontFamily="@font/nunito_semibold"
+        android:textSize="16dp"
+        android:inputType="textPersonName"
+        app:met_floatingLabel="normal"
+        android:layout_below="@id/numberr"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginLeft="40dp"
+        />
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/emaill"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:hint="E-mail"
+        android:textAlignment="center"
+        android:fontFamily="@font/nunito_semibold"
+        android:textSize="16dp"
+        android:inputType="textEmailAddress"
+        app:met_floatingLabel="normal"
+        android:layout_below="@id/namee"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginLeft="40dp"
+        />
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:layout_below="@id/emaill"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginLeft="40dp"
+        android:id="@+id/passwordd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:hint="Password"
+        android:textAlignment="center"
+        android:fontFamily="@font/nunito_semibold"
+        android:textSize="16dp"
+        android:inputType="textPassword"
+        app:met_floatingLabel="normal"
+        />
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:layout_below="@id/passwordd"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginLeft="40dp"
+        android:id="@+id/age"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:hint="Age"
+        android:textAlignment="center"
+        android:fontFamily="@font/nunito_semibold"
+        android:textSize="16dp"
+        android:inputType="date"
+        app:met_floatingLabel="normal"
+        />
+    <Button
+
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:id="@+id/register"
+        android:layout_below="@id/age"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="20dp"
+        android:fontFamily="@font/nunito_sans_bold"
+        android:text="Sign Up"
+        android:background="@drawable/button_back"
+        android:textSize="18dp"
+        android:textColor="#fff"
+        android:textAllCaps="false"
+        android:textStyle="bold"
+        ></Button>
+    <LinearLayout
+        android:id="@+id/logiScreen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        >
+        <Button
+            android:id="@+id/logiScreen1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:text="Already Have An Account!"
+            android:textAllCaps="false"
+            android:textColor="@android:color/darker_gray"
+            android:fontFamily="@font/nunito_semibold"
+            android:textSize="14dp"
+
+            ></Button>
+        <Button
+            android:onClick="login"
+
+            android:id="@+id/logiScreen2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:text="Login"
+            android:textAllCaps="false"
+            android:textColor="@color/maincolor"
+            android:fontFamily="@font/nunito_semibold"
+            android:textSize="14dp"
+
+            ></Button>
+    </LinearLayout>
+</RelativeLayout>
