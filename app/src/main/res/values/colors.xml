@@ -5,4 +5,5 @@
     <color name="colorAccent">#4748DC</color>
     <color name="transparentColor">#7673DE</color>
     <color name="maincolor">#4748DC</color>
+    <color name="containerColor">#F5F8F1</color>
 </resources>
