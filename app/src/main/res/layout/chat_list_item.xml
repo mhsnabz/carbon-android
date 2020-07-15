@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/holder"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="60dp">
+
+    <ProgressBar
+        android:id="@+id/progres"
+        android:layout_marginLeft="23dp"
+        android:layout_centerVertical="true"
+        android:layout_width="20dp"
+        android:layout_height="20dp">
+
+    </ProgressBar>
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_width="50dp"
+        android:id="@+id/profile_image"
+        android:src="@android:color/darker_gray"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="8dp"
+        android:layout_height="50dp">
+
+    </de.hdodenhof.circleimageview.CircleImageView>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@id/profile_image"
+        android:layout_marginLeft="8dp"
+        android:orientation="vertical"
+        android:layout_marginRight="100dp"
+        >
+        <TextView
+            android:fontFamily="@font/nunito_semibold"
+            android:textSize="14dp"
+            android:maxLines="1"
+            android:textColor="#000"
+            android:id="@+id/name"
+            android:text="name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+        </TextView>
+        <TextView
+            android:fontFamily="@font/nunito_semibold"
+            android:textSize="12dp"
+            android:maxLines="1"
+            android:text="last msg"
+            android:id="@+id/lastMsg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+        </TextView>
+    </LinearLayout>
+    <TextView
+        android:id="@+id/timeAgo"
+        android:text="11:11"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="40dp"
+        android:fontFamily="@font/nunito_semibold"
+        android:textSize="10dp"
+        android:layout_marginTop="10dp"
+
+        ></TextView>
+
+
+    <RelativeLayout
+        android:layout_marginTop="4dp"
+        android:visibility="visible"
+        android:id="@+id/relBadge"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_alignParentEnd="true"
+        android:background="@drawable/badge"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="42dp"
+        android:layout_below="@id/timeAgo"
+        >
+        <TextView
+            android:id="@+id/badgeCount"
+            android:text="1"
+            android:layout_centerInParent="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/badge"
+            android:textColor="@color/white"
+            ></TextView>
+    </RelativeLayout>
+    <ImageButton
+        android:layout_width="30dp"
+        android:layout_height="50dp"
+        android:scaleType="centerInside"
+        android:layout_centerVertical="true"
+        android:id="@+id/options"
+        android:background="@android:color/transparent"
+        android:src="@drawable/more"
+        android:layout_alignParentEnd="true"
+
+        ></ImageButton>
+</RelativeLayout>

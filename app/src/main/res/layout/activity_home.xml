@@ -79,7 +79,38 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="68dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            >
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/headerBtn"
+                android:layout_centerVertical="true"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="8dp"
+                android:src="@drawable/story"
+                android:layout_width="55dp"
+                android:layout_height="55dp">
+
+            </de.hdodenhof.circleimageview.CircleImageView>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/headerFriend"
+                android:layout_toEndOf="@id/headerBtn"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginTop="14dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_centerVertical="true"
+
+                ></androidx.recyclerview.widget.RecyclerView>
+        </RelativeLayout>
+
             <LinearLayout
+                android:id="@+id/buttons"
                 android:layout_marginLeft="30dp"
                 android:layout_alignParentBottom="true"
                 android:layout_marginBottom="4dp"
