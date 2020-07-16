@@ -6,15 +6,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/containerColor"
+    android:id="@+id/parent"
     tools:context=".ChatController.ChatActivity">
+
+
     <RelativeLayout
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="70dp">
+        android:layout_height="56dp">
 
         <ImageButton
             android:id="@+id/back"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_centerVertical="true"
             android:layout_alignParentLeft="true"
             android:background="@android:color/transparent"
@@ -49,9 +53,166 @@
     </RelativeLayout>
 
     <RelativeLayout
+        android:layout_marginBottom="56dp"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:background="@color/white"
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolbar">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            ></androidx.recyclerview.widget.RecyclerView>
+    </RelativeLayout>
+    <androidx.cardview.widget.CardView
+        android:id="@+id/mediaToolbar"
+        android:visibility="gone"
+        android:layout_above="@id/mgs_bar"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:elevation="4dp"
+        app:cardCornerRadius="8dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+       android:layout_marginBottom="-18dp"
+
+
+        >
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <LinearLayout
+                android:weightSum="29"
+
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <com.airbnb.lottie.LottieAnimationView
+                    app:lottie_rawRes="@raw/image"
+                    android:layout_weight="5"
+                    app:lottie_loop="true"
+                    app:lottie_autoPlay="true"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp">
+
+                </com.airbnb.lottie.LottieAnimationView>
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"/>
+                <com.airbnb.lottie.LottieAnimationView
+                    app:lottie_rawRes="@raw/vv"
+                    android:layout_weight="5"
+                    app:lottie_loop="true"
+                    app:lottie_autoPlay="true"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp">
+
+                </com.airbnb.lottie.LottieAnimationView>
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"/>
+                <com.airbnb.lottie.LottieAnimationView
+                    app:lottie_rawRes="@raw/sound"
+                    android:layout_weight="5"
+                    app:lottie_loop="true"
+                    app:lottie_autoPlay="true"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp">
+
+                </com.airbnb.lottie.LottieAnimationView>
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"/>
+                <com.airbnb.lottie.LottieAnimationView
+                    app:lottie_rawRes="@raw/location"
+                    android:layout_weight="5"
+                    app:lottie_loop="true"
+                    app:lottie_autoPlay="true"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp">
+
+                </com.airbnb.lottie.LottieAnimationView>
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"/>
+                <com.airbnb.lottie.LottieAnimationView
+                    app:lottie_rawRes="@raw/cancel"
+                    android:layout_weight="5"
+                    app:lottie_loop="true"
+                    app:lottie_autoPlay="true"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp">
+
+                </com.airbnb.lottie.LottieAnimationView>
+            </LinearLayout>
+        </RelativeLayout>
+    </androidx.cardview.widget.CardView>
+    <RelativeLayout
+        android:layout_marginTop="2dp"
+        android:id="@+id/mgs_bar"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+
         android:layout_alignParentBottom="true"
-        ></RelativeLayout>
+        >
+
+        <RelativeLayout
+            android:id="@+id/inputbar"
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="0.5dp"
+            android:background="@color/white"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+            <ImageButton
+                android:src="@drawable/send"
+                android:scaleType="fitXY"
+                android:id="@+id/send"
+                android:layout_centerVertical="true"
+                android:layout_width="35dp"
+                android:layout_marginRight="5dp"
+                android:background="@android:color/transparent"
+                android:layout_height="35dp"
+                android:layout_alignParentEnd="true"
+                ></ImageButton>
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_marginTop="4dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:id="@+id/inputLayout"
+                android:background="@drawable/textview_back"
+                android:maxLines="4"
+                android:minHeight="35dp"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@id/media"
+                android:layout_toStartOf="@id/send"
+                android:scrollbars="vertical"
+                android:fontFamily="@font/nunito_semibold"
+                android:hint="Type New Messege..."
+                android:textSize="14sp"
+                />
+
+            <ImageButton
+                android:onClick="mediaClik"
+                android:src="@drawable/media"
+                android:scaleType="fitXY"
+                android:id="@+id/media"
+                android:layout_centerVertical="true"
+                android:layout_width="35dp"
+                android:layout_marginRight="5dp"
+                android:background="@android:color/transparent"
+                android:layout_height="35dp"
+                android:layout_alignParentStart="true"
+                android:layout_marginLeft="4dp"
+                ></ImageButton>
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+
 </RelativeLayout>

@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.gargisoft.carbon.Adapter.ChatList;
+import com.gargisoft.carbon.ChatController.ChatActivity;
 import com.gargisoft.carbon.Helper.Utils;
 import com.gargisoft.carbon.Model.ChatListModel;
 import com.gargisoft.carbon.Model.currentUser;
@@ -88,6 +89,9 @@ public class FriendListFragment extends Fragment {
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        Intent i = new Intent(getActivity(), ChatActivity.class);
+                        getActivity().startActivity(i);
+                        Utils.go(getActivity());
                        /* Intent i = new Intent(getActivity() , OneToOneChatActivity.class);
                         i.putExtra("currentUser",user);
                         i.putExtra("otherUser",model.getSenderUid());
