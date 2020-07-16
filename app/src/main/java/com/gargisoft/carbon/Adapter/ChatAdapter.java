@@ -62,19 +62,29 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
             View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.received,parent,false);
             return new ChatAdapter.ViewHolder(itemView);
         }else if (i == VIEW_TYPE_IMAGE_SEND){
-
+            View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.send_msg,parent,false);
+            return new ChatAdapter.ViewHolder(itemView);
         }else if (i == VIEW_TYPE_IMAGE_RECIEVED){
+            View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.send_msg,parent,false);
+            return new ChatAdapter.ViewHolder(itemView);
 
         }else if ( i == VIEW_TYPE_VIDEO_RECIEVED){
+            View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.send_msg,parent,false);
+            return new ChatAdapter.ViewHolder(itemView);
 
         }else if (i == VIEW_TYPE_VIDEO_SEND){
+            View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.send_msg,parent,false);
+            return new ChatAdapter.ViewHolder(itemView);
 
         }else if (i == VIEW_TYPE_SOUND_RECEIVED){
+            View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.send_msg,parent,false);
+            return new ChatAdapter.ViewHolder(itemView);
 
         }else {
-            //sound send
+            View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.send_msg,parent,false);
+            return new ChatAdapter.ViewHolder(itemView);
         }
-        return null;
+
     }
 
     @Override
@@ -85,7 +95,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
                 return VIEW_TYPE_IMAGE_SEND;
             }else if (msg.getType().equals("video")){
                 return VIEW_TYPE_VIDEO_SEND;
-            }else if (msg.getType().equals("msg")){
+            }else if (msg.getType().equals("text")){
                 return VIEW_TYPE_MESSAGE_SENT;
             }else {
                 return VIEW_TYPE_SOUND_SEND;
@@ -95,7 +105,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
                 return VIEW_TYPE_IMAGE_RECIEVED;
             }else if (msg.getType().equals("video")){
                 return VIEW_TYPE_VIDEO_RECIEVED;
-            }else if (msg.getType().equals("msg")){
+            }else if (msg.getType().equals("text")){
                 return VIEW_TYPE_MESSAGE_RECIEVED;
             }else {
                 return VIEW_TYPE_SOUND_RECEIVED;

@@ -29,18 +29,26 @@ import com.gargisoft.carbon.Model.ConservationModel;
 import com.gargisoft.carbon.Model.currentUser;
 import com.gargisoft.carbon.Model.discoverUser;
 import com.gargisoft.carbon.R;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.MetadataChanges;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.SetOptions;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -56,6 +64,7 @@ public class ChatActivity extends AppCompatActivity {
     List<ConservationModel> msgges = new ArrayList<>();
     RecyclerView msg_list;
     ChatAdapter adapter;
+    TextInputEditText msgText;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -215,7 +224,8 @@ public class ChatActivity extends AppCompatActivity {
 
         msg_list = (RecyclerView)findViewById(R.id.list);
         msg_list.setHasFixedSize(true);
-        msg_list.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true));
+        msg_list.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        msgText = (TextInputEditText)findViewById(R.id.msgText);
         getMsg();
     }
 
@@ -282,6 +292,64 @@ public class ChatActivity extends AppCompatActivity {
 
     public void sendMsg(View view)
     {
+        if (msgges.size() > 0 ){
+            msg_list.scrollToPosition(msgges.size() - 1);
+        }
+        if (msgText.getText().toString().length() > 0 ){
+            Timestamp tarih = Timestamp.now();
+            String msg = msgText.getText().toString();
+            msgText.setText("");
+            //        let dbMsgCurrent = Firestore.firestore().collection("msg").document(currentUser.uid).collection(otherUser)
+            //        let dbMsgOther = Firestore.firestore().collection("msg").document(otherUser).collection(currentUser.uid)
+            CollectionReference dbMsgCurrent = FirebaseFirestore.getInstance().collection("msg")
+                    .document(currentUser.getUid()).collection(otherUser.getUid());
+            CollectionReference  dbMsgOther = FirebaseFirestore.getInstance().collection("msg")
+                    .document(otherUser.getUid()).collection(currentUser.getUid());
+
+            Map<String , Object> msgMap = new HashMap<>();
+            //        let msgMap = [ "msg":msg,"time":time,"tarih":tarih,"date":FieldValue.serverTimestamp(),
+            //        "senderUid":currentUser.uid!,
+            //        "getterUid":otherUser,"type":"text","name":currentUser.name!] as [String:Any]
+            msgMap.put("msg",msg);
+            msgMap.put("tarih",tarih);
+            msgMap.put("date", FieldValue.serverTimestamp());
+            msgMap.put("senderUid",currentUser.getUid());
+            msgMap.put("getterUid",otherUser.getUid());
+            msgMap.put("type","text");
+            msgMap.put("name",currentUser.getName());
+//Firestore.firestore().collection("user").document(currentUser.uid!).collection("msgList")
+// .document(currentUser.uid!).collection(currentUser.uid).document(otherUser)
+            dbMsgCurrent.add(msgMap);
+            dbMsgOther.add(msgMap);
+            DocumentReference dbCurrent = FirebaseFirestore.getInstance().collection("user")
+                    .document(currentUser.getUid()).collection("msgList")
+                    .document(currentUser.getUid()).collection(currentUser.getUid()).document(otherUser.getUid());
+            DocumentReference dbOther = FirebaseFirestore.getInstance().collection("user")
+                    .document(otherUser.getUid()).collection("msgList")
+                    .document(otherUser.getUid()).collection(otherUser.getUid()).document(currentUser.getUid());
+            Map<String, Object>  lastMsgInfoCurrent = new HashMap<>();
+
+            lastMsgInfoCurrent.put("lastMsg",msg);
+            lastMsgInfoCurrent.put("name",otherUser.getName());
+            lastMsgInfoCurrent.put("date",FieldValue.serverTimestamp());
+            lastMsgInfoCurrent.put("getterUid",currentUser.getUid());
+            lastMsgInfoCurrent.put("senderUid",otherUser.getUid());
+            lastMsgInfoCurrent.put("senderProfileImage",otherUser.getProfileImage());
+
+
+            Map<String,Object> lastMsgInfoOther = new HashMap<>();
+
+            lastMsgInfoOther.put("lastMsg",msg);
+            lastMsgInfoOther.put("name",currentUser.getName());
+            lastMsgInfoOther.put("date",FieldValue.serverTimestamp());
+            lastMsgInfoOther.put("getterUid",otherUser.getUid());
+            lastMsgInfoOther.put("senderUid",currentUser.getUid());
+            lastMsgInfoOther.put("senderProfileImage",currentUser.getProfileImage());
+
+            dbCurrent.set(lastMsgInfoCurrent, SetOptions.merge());
+            dbOther.set(lastMsgInfoOther,SetOptions.merge());
+            
+        }
 
     }
 }
