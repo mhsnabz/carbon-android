@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_margin="4dp"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_alignParentTop="true"
+        android:id="@+id/profile_image"
+        android:src="@android:color/darker_gray"
+        ></de.hdodenhof.circleimageview.CircleImageView>
+    <RelativeLayout
+        android:layout_marginRight="4dp"
+        android:id="@+id/msg"
+        android:layout_marginTop="8dp"
+        android:layout_toEndOf="@+id/profileImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/received_bubble"
+        >
+        <TextView
+            android:padding="4dp"
+            android:layout_width="wrap_content"
+            android:text="Hello World"
+            android:textColor="@color/black"
+            android:fontFamily="@font/nunito_semibold"
+            android:textSize="14sp"
+            android:id="@+id/msgText"
+            android:layout_height="wrap_content">
+
+        </TextView>
+    </RelativeLayout>
+    <TextView
+        android:id="@+id/timeAgo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/msg"
+        android:layout_toEndOf="@id/profileImage"
+        android:textSize="8dp"
+        android:text="11/11/20 12:34"
+        android:layout_marginTop="4dp"
+        android:fontFamily="@font/nunito_semibold"
+        ></TextView>
+</RelativeLayout>
