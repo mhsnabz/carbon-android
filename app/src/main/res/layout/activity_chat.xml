@@ -158,6 +158,67 @@
             </LinearLayout>
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
+    <androidx.cardview.widget.CardView
+        android:id="@+id/recordBar"
+
+        android:visibility="gone"
+        android:layout_above="@id/mgs_bar"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:elevation="4dp"
+        app:cardCornerRadius="8dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="-18dp"
+
+
+        >
+        <RelativeLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <LinearLayout
+                android:weightSum="35"
+
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <com.airbnb.lottie.LottieAnimationView
+                    android:id="@+id/record"
+                    app:lottie_rawRes="@raw/record_btn"
+                    android:layout_weight="4"
+                    app:lottie_loop="true"
+                    app:lottie_repeatCount="2"
+                    app:lottie_autoPlay="true"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp">
+
+                </com.airbnb.lottie.LottieAnimationView>
+
+                <com.airbnb.lottie.LottieAnimationView
+                    app:lottie_rawRes="@raw/recording"
+                    android:id="@+id/recordinProgres"
+                    android:layout_weight="25"
+                    app:lottie_repeatCount="2"
+
+                    android:layout_width="40dp"
+                    android:layout_height="40dp">
+
+                </com.airbnb.lottie.LottieAnimationView>
+
+                <ImageButton
+                    android:layout_weight="4"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:id="@+id/down"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/down"
+
+                    ></ImageButton>
+
+            </LinearLayout>
+        </RelativeLayout>
+    </androidx.cardview.widget.CardView>
     <RelativeLayout
         android:layout_marginTop="2dp"
         android:id="@+id/mgs_bar"

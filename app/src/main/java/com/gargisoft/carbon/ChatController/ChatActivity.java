@@ -102,7 +102,23 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Toast.makeText(ChatActivity.this,"sound",Toast.LENGTH_SHORT).show();
+                toggle(false);
+                Thread thread = new Thread(){
+                    @Override
+                    public void run() {
+                        super.run();
+                        try{
+                            sleep(1000);
+                        }catch (InterruptedException ex){
 
+                        }finally {
+
+                        }
+                    }
+                };
+                thread.run();
+               // toggleRecord(true);
+                toggleRecord(true);
             }
         });
 
@@ -126,8 +142,9 @@ public class ChatActivity extends AppCompatActivity {
         CardView toolbar = (CardView)findViewById(R.id.mediaToolbar);
         ViewGroup parent = findViewById(R.id.parent);
         Transition transition = new Slide(Gravity.BOTTOM);
-        transition.setDuration(300);
+        transition.setDuration(1000);
         transition.addTarget(R.id.mediaToolbar);
+
         TransitionManager.beginDelayedTransition(parent, transition);
         toolbar.setVisibility(show ? View.VISIBLE : View.GONE);
         video.setRepeatCount(1);
@@ -140,5 +157,15 @@ public class ChatActivity extends AppCompatActivity {
         image.playAnimation();
         location.playAnimation();
         cancel.playAnimation();
+    }
+    private void toggleRecord(boolean show) {
+        CardView toolbar = (CardView)findViewById(R.id.recordBar);
+        ViewGroup parent = findViewById(R.id.parent);
+        Transition transition = new Slide(Gravity.BOTTOM);
+        transition.setDuration(1000);
+        transition.addTarget(R.id.recordBar);
+        TransitionManager.beginDelayedTransition(parent, transition);
+        toolbar.setVisibility(show ? View.VISIBLE : View.GONE);
+
     }
 }
