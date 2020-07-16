@@ -1,7 +1,10 @@
 package com.gargisoft.carbon.ChatController;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.animation.Animator;
 import android.content.Intent;
@@ -20,12 +23,24 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.gargisoft.carbon.Adapter.ChatAdapter;
 import com.gargisoft.carbon.Helper.Utils;
+import com.gargisoft.carbon.Model.ConservationModel;
 import com.gargisoft.carbon.Model.currentUser;
 import com.gargisoft.carbon.Model.discoverUser;
 import com.gargisoft.carbon.R;
+import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.MetadataChanges;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -37,6 +52,10 @@ public class ChatActivity extends AppCompatActivity {
     CircleImageView profileImage;
     TextView name ;
     ImageButton back , dismiss;
+    ConservationModel model;
+    List<ConservationModel> msgges = new ArrayList<>();
+    RecyclerView msg_list;
+    ChatAdapter adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -192,6 +211,37 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
+        //TODO: msg init
+
+        msg_list = (RecyclerView)findViewById(R.id.list);
+        msg_list.setHasFixedSize(true);
+        msg_list.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true));
+        getMsg();
+    }
+
+    private void getMsg(){
+        Query db = FirebaseFirestore.getInstance().collection("msg")
+                .document(currentUser.getUid()).collection(otherUser.getUid()).orderBy("time", Query.Direction.ASCENDING);
+        db.addSnapshotListener(this, MetadataChanges.INCLUDE, new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot querySnapshot, @Nullable FirebaseFirestoreException e) {
+                if (e == null){
+                    if (querySnapshot!=null){
+                        for (DocumentChange doc : querySnapshot.getDocumentChanges()){
+                            if (doc.getType().equals(DocumentChange.Type.ADDED)){
+                                model = doc.getDocument().toObject(ConservationModel.class);
+                                msgges.add(model);
+                                msg_list.scrollToPosition(msgges.size() - 1);
+                            }
+                        }
+
+                    }
+                    adapter = new ChatAdapter(msgges,currentUser,otherUser,ChatActivity.this);
+                    msg_list.setAdapter(adapter);
+                    adapter.notifyDataSetChanged();
+                }
+            }
+        });
     }
 
 
@@ -228,5 +278,10 @@ public class ChatActivity extends AppCompatActivity {
         transition.addTarget(R.id.recordBar);
         TransitionManager.beginDelayedTransition(parent, transition);
         toolbar.setVisibility(show ? View.VISIBLE : View.GONE);
+    }
+
+    public void sendMsg(View view)
+    {
+
     }
 }

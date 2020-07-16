@@ -39,16 +39,15 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
     List<ConservationModel> list;
     currentUser user , otherUser;
     Context context;
-    String url;
-    String profileUrl;
 
-    public ChatAdapter(List<ConservationModel> list, currentUser user, currentUser otherUser, Context context, String url, String profileUrl) {
+
+
+    public ChatAdapter(List<ConservationModel> list, currentUser user, currentUser otherUser, Context context) {
         this.list = list;
         this.user = user;
         this.otherUser = otherUser;
         this.context = context;
-        this.url = url;
-        this.profileUrl = profileUrl;
+
     }
 
     @NonNull
@@ -107,14 +106,23 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position)
     {
-        holder.setMsg(list.get(position).getMsg());
-        holder.setProfileImage(list.get(position).getGetterUid());
-        holder.getDate(list.get(position).getDate().getSeconds());
+        switch (holder.getItemViewType()){
+            case VIEW_TYPE_MESSAGE_SENT:
+                holder.setMsg(list.get(position).getMsg());
+                holder.getDate(list.get(position).getDate().getSeconds());
+                break;
+            case VIEW_TYPE_MESSAGE_RECIEVED:
+                holder.setMsg(list.get(position).getMsg());
+                holder.setProfileImage(otherUser.getProfileImage());
+                holder.getDate(list.get(position).getDate().getSeconds());
+                break;
+        }
+
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return list.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
