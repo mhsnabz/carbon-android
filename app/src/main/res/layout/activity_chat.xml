@@ -37,6 +37,7 @@
                 android:id="@+id/profileImage"
                 ></de.hdodenhof.circleimageview.CircleImageView>
         <TextView
+            android:id="@+id/name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
@@ -88,9 +89,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
                 <com.airbnb.lottie.LottieAnimationView
+                    android:id="@+id/image"
                     app:lottie_rawRes="@raw/image"
                     android:layout_weight="5"
                     app:lottie_loop="true"
+                    app:lottie_repeatCount="2"
                     app:lottie_autoPlay="true"
                     android:layout_width="40dp"
                     android:layout_height="40dp">
@@ -102,9 +105,10 @@
                     android:layout_weight="1"/>
                 <com.airbnb.lottie.LottieAnimationView
                     app:lottie_rawRes="@raw/vv"
+                    android:id="@+id/video"
                     android:layout_weight="5"
-                    app:lottie_loop="true"
-                    app:lottie_autoPlay="true"
+                    app:lottie_repeatCount="2"
+
                     android:layout_width="40dp"
                     android:layout_height="40dp">
 
@@ -114,10 +118,11 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"/>
                 <com.airbnb.lottie.LottieAnimationView
+                    android:id="@+id/sound"
                     app:lottie_rawRes="@raw/sound"
                     android:layout_weight="5"
-                    app:lottie_loop="true"
-                    app:lottie_autoPlay="true"
+                    app:lottie_repeatCount="2"
+
                     android:layout_width="40dp"
                     android:layout_height="40dp">
 
@@ -127,10 +132,11 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"/>
                 <com.airbnb.lottie.LottieAnimationView
+                    android:id="@+id/location"
                     app:lottie_rawRes="@raw/location"
                     android:layout_weight="5"
                     app:lottie_loop="true"
-                    app:lottie_autoPlay="true"
+
                     android:layout_width="40dp"
                     android:layout_height="40dp">
 
@@ -140,10 +146,11 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"/>
                 <com.airbnb.lottie.LottieAnimationView
+                    android:id="@+id/cancel"
                     app:lottie_rawRes="@raw/cancel"
                     android:layout_weight="5"
                     app:lottie_loop="true"
-                    app:lottie_autoPlay="true"
+
                     android:layout_width="40dp"
                     android:layout_height="40dp">
 

@@ -21,7 +21,12 @@ import com.gargisoft.carbon.ChatController.ChatActivity;
 import com.gargisoft.carbon.Helper.Utils;
 import com.gargisoft.carbon.Model.ChatListModel;
 import com.gargisoft.carbon.Model.currentUser;
+import com.gargisoft.carbon.Model.discoverUser;
 import com.gargisoft.carbon.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
@@ -67,7 +72,7 @@ public class FriendListFragment extends Fragment {
                 .build();
         adapter = new FirestoreRecyclerAdapter<ChatListModel, ChatList>(options) {
             @Override
-            protected void onBindViewHolder(@NonNull ChatList holder, int position, @NonNull final ChatListModel model)
+            protected void onBindViewHolder(@NonNull final ChatList holder, int position, @NonNull final ChatListModel model)
             {
                 holder.setBadge(model.getBadge());
                 holder.setLastMsg(model.getLastMsg());
@@ -89,9 +94,24 @@ public class FriendListFragment extends Fragment {
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent i = new Intent(getActivity(), ChatActivity.class);
-                        getActivity().startActivity(i);
-                        Utils.go(getActivity());
+
+                        DocumentReference ref = FirebaseFirestore.getInstance().collection("user")
+                                .document(model.getSenderUid());
+                        ref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                if (task.isSuccessful()){
+                                    Intent i = new Intent(getActivity(), ChatActivity.class);
+                                    i.putExtra("currentUser",currentUser);
+                                    currentUser user = task.getResult().toObject(currentUser.class);
+                                    i.putExtra("otherUser",user);
+
+                                    getActivity().startActivity(i);
+                                    Utils.go(getActivity());
+                                }
+                            }
+                        });
+
                        /* Intent i = new Intent(getActivity() , OneToOneChatActivity.class);
                         i.putExtra("currentUser",user);
                         i.putExtra("otherUser",model.getSenderUid());
