@@ -119,7 +119,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
         switch (holder.getItemViewType()){
             case VIEW_TYPE_MESSAGE_SENT:
                 holder.setMsg(list.get(position).getMsg());
-                holder.getDate(list.get(position).getDate().getSeconds());
+                holder.getDate(list.get(position).getTarih().getDate());
                 break;
             case VIEW_TYPE_MESSAGE_RECIEVED:
                 holder.setMsg(list.get(position).getMsg());

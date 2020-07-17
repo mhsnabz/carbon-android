@@ -231,7 +231,7 @@ public class ChatActivity extends AppCompatActivity {
 
     private void getMsg(){
         Query db = FirebaseFirestore.getInstance().collection("msg")
-                .document(currentUser.getUid()).collection(otherUser.getUid()).orderBy("time", Query.Direction.ASCENDING);
+                .document(currentUser.getUid()).collection(otherUser.getUid()).orderBy("date", Query.Direction.ASCENDING);
         db.addSnapshotListener(this, MetadataChanges.INCLUDE, new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot querySnapshot, @Nullable FirebaseFirestoreException e) {
@@ -241,7 +241,7 @@ public class ChatActivity extends AppCompatActivity {
                             if (doc.getType().equals(DocumentChange.Type.ADDED)){
                                 model = doc.getDocument().toObject(ConservationModel.class);
                                 msgges.add(model);
-                                msg_list.scrollToPosition(msgges.size() - 1);
+
                             }
                         }
 
@@ -292,24 +292,19 @@ public class ChatActivity extends AppCompatActivity {
 
     public void sendMsg(View view)
     {
-        if (msgges.size() > 0 ){
-            msg_list.scrollToPosition(msgges.size() - 1);
-        }
+
         if (msgText.getText().toString().length() > 0 ){
             Timestamp tarih = Timestamp.now();
             String msg = msgText.getText().toString();
             msgText.setText("");
-            //        let dbMsgCurrent = Firestore.firestore().collection("msg").document(currentUser.uid).collection(otherUser)
-            //        let dbMsgOther = Firestore.firestore().collection("msg").document(otherUser).collection(currentUser.uid)
+
             CollectionReference dbMsgCurrent = FirebaseFirestore.getInstance().collection("msg")
                     .document(currentUser.getUid()).collection(otherUser.getUid());
             CollectionReference  dbMsgOther = FirebaseFirestore.getInstance().collection("msg")
                     .document(otherUser.getUid()).collection(currentUser.getUid());
 
             Map<String , Object> msgMap = new HashMap<>();
-            //        let msgMap = [ "msg":msg,"time":time,"tarih":tarih,"date":FieldValue.serverTimestamp(),
-            //        "senderUid":currentUser.uid!,
-            //        "getterUid":otherUser,"type":"text","name":currentUser.name!] as [String:Any]
+
             msgMap.put("msg",msg);
             msgMap.put("tarih",tarih);
             msgMap.put("date", FieldValue.serverTimestamp());
@@ -317,8 +312,7 @@ public class ChatActivity extends AppCompatActivity {
             msgMap.put("getterUid",otherUser.getUid());
             msgMap.put("type","text");
             msgMap.put("name",currentUser.getName());
-//Firestore.firestore().collection("user").document(currentUser.uid!).collection("msgList")
-// .document(currentUser.uid!).collection(currentUser.uid).document(otherUser)
+
             dbMsgCurrent.add(msgMap);
             dbMsgOther.add(msgMap);
             DocumentReference dbCurrent = FirebaseFirestore.getInstance().collection("user")
@@ -348,8 +342,67 @@ public class ChatActivity extends AppCompatActivity {
 
             dbCurrent.set(lastMsgInfoCurrent, SetOptions.merge());
             dbOther.set(lastMsgInfoOther,SetOptions.merge());
-            
+
         }
+
+    }
+
+    private void setOnline(){
+        //    let dbb = Firestore.firestore().collection("user").document(otherUser!.uid!).collection("msgList")
+        //                          .document(otherUser!.uid!).collection(otherUser!.uid!).document(Auth.auth().currentUser!.uid)
+        //                      dbb.setData(["isOnline":true], merge: true, completion: nil)
+        DocumentReference dbb = FirebaseFirestore.getInstance().collection("user")
+                .document(otherUser.getUid()).collection("msgList")
+                .document(otherUser.getUid()).collection(otherUser.getUid()).document(currentUser.getUid());
+        Map<String,Object>map = new HashMap<>();
+        map.put("isOnline",true);
+        dbb.set(map,SetOptions.merge());
+
+        //      let dbOtherUser = Firestore.firestore().collection("user").document(currentUser!.uid)
+        //      .collection("msgList").document(currentUser!.uid).collection(currentUser!.uid).document(otherUser!.uid)
+        //                               dbOtherUser.setData(["badge":0], merge: true)
+
+        DocumentReference  dbOtherUser = FirebaseFirestore.getInstance().collection("user")
+                .document(currentUser.getUid()).collection("msgList")
+                .document(currentUser.getUid()).collection(currentUser.getUid()).document(otherUser.getUid());
+        Map<String,Object>map1 = new HashMap<>();
+        map1.put("badge",0);
+        dbOtherUser.set(map1,SetOptions.merge());
+//      let badgeRef = Firestore.firestore().collection("user")
+//            .document(Auth.auth().currentUser!.uid)
+//            .collection("msg-badge")
+//            .document(Auth.auth().currentUser!.uid)
+//            .collection(otherUser!.uid)
+//            .whereField("badge", isEqualTo: otherUser!.uid as Any)
+//        badgeRef.getDocuments { (querySnap, err) in
+//            if err != nil {
+//                print("err\(err?.localizedDescription as Any)")
+//            }else{
+//                if !querySnap!.isEmpty {
+//                    for doc in querySnap!.documents{
+//                      let badgeRef = Firestore.firestore().collection("user")
+//                      .document(Auth.auth().currentUser!.uid)
+//                      .collection("msg-badge")
+//                      .document(Auth.auth().currentUser!.uid)
+//                        .collection(self.otherUser!.uid).document(doc.documentID)
+//                        badgeRef.delete { (err) in
+//                            if err != nil {
+//                                 print("err\(err?.localizedDescription as Any)")
+//                            }else{
+//                                   let badgeRef = Firestore.firestore().collection("user")
+//                                                   .document(Auth.auth().currentUser!.uid)
+//                                                   .collection("msg-badge-count")
+//                                                   .document(Auth.auth().currentUser!.uid)
+//                                                     .collection(self.otherUser!.uid)
+//                                badgeRef.document(doc.documentID)
+//                            }
+//                        }
+//                    }
+//                }else{
+//                    print("empty")
+//                }
+//            }
+//        }
 
     }
 }
