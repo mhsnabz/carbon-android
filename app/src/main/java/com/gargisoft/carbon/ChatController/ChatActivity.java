@@ -1,5 +1,6 @@
 package com.gargisoft.carbon.ChatController;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
@@ -29,11 +30,14 @@ import com.gargisoft.carbon.Model.ConservationModel;
 import com.gargisoft.carbon.Model.currentUser;
 import com.gargisoft.carbon.Model.discoverUser;
 import com.gargisoft.carbon.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -348,9 +352,7 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void setOnline(){
-        //    let dbb = Firestore.firestore().collection("user").document(otherUser!.uid!).collection("msgList")
-        //                          .document(otherUser!.uid!).collection(otherUser!.uid!).document(Auth.auth().currentUser!.uid)
-        //                      dbb.setData(["isOnline":true], merge: true, completion: nil)
+
         DocumentReference dbb = FirebaseFirestore.getInstance().collection("user")
                 .document(otherUser.getUid()).collection("msgList")
                 .document(otherUser.getUid()).collection(otherUser.getUid()).document(currentUser.getUid());
@@ -358,9 +360,7 @@ public class ChatActivity extends AppCompatActivity {
         map.put("isOnline",true);
         dbb.set(map,SetOptions.merge());
 
-        //      let dbOtherUser = Firestore.firestore().collection("user").document(currentUser!.uid)
-        //      .collection("msgList").document(currentUser!.uid).collection(currentUser!.uid).document(otherUser!.uid)
-        //                               dbOtherUser.setData(["badge":0], merge: true)
+
 
         DocumentReference  dbOtherUser = FirebaseFirestore.getInstance().collection("user")
                 .document(currentUser.getUid()).collection("msgList")
@@ -368,41 +368,50 @@ public class ChatActivity extends AppCompatActivity {
         Map<String,Object>map1 = new HashMap<>();
         map1.put("badge",0);
         dbOtherUser.set(map1,SetOptions.merge());
-//      let badgeRef = Firestore.firestore().collection("user")
-//            .document(Auth.auth().currentUser!.uid)
-//            .collection("msg-badge")
-//            .document(Auth.auth().currentUser!.uid)
-//            .collection(otherUser!.uid)
-//            .whereField("badge", isEqualTo: otherUser!.uid as Any)
-//        badgeRef.getDocuments { (querySnap, err) in
-//            if err != nil {
-//                print("err\(err?.localizedDescription as Any)")
-//            }else{
-//                if !querySnap!.isEmpty {
-//                    for doc in querySnap!.documents{
-//                      let badgeRef = Firestore.firestore().collection("user")
-//                      .document(Auth.auth().currentUser!.uid)
-//                      .collection("msg-badge")
-//                      .document(Auth.auth().currentUser!.uid)
-//                        .collection(self.otherUser!.uid).document(doc.documentID)
-//                        badgeRef.delete { (err) in
-//                            if err != nil {
-//                                 print("err\(err?.localizedDescription as Any)")
-//                            }else{
-//                                   let badgeRef = Firestore.firestore().collection("user")
-//                                                   .document(Auth.auth().currentUser!.uid)
-//                                                   .collection("msg-badge-count")
-//                                                   .document(Auth.auth().currentUser!.uid)
-//                                                     .collection(self.otherUser!.uid)
-//                                badgeRef.document(doc.documentID)
-//                            }
-//                        }
-//                    }
-//                }else{
-//                    print("empty")
-//                }
-//            }
-//        }
 
+
+        Query badgeRef = FirebaseFirestore.getInstance().collection("user")
+                .document(currentUser.getUid())
+                .collection("msg-badge")
+                .document(currentUser.getUid())
+                .collection(otherUser.getUid())
+                .whereEqualTo("badge",otherUser.getUid());
+        badgeRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()){
+                    if (!task.getResult().isEmpty()){
+                        for(DocumentSnapshot doc : task.getResult().getDocuments()){
+
+                            DocumentReference ref = FirebaseFirestore.getInstance().collection("user")
+                                    .document(currentUser.getUid())
+                                    .collection("msg-badge")
+                                    .document(currentUser.getUid())
+                                    .collection(otherUser.getUid()).document(doc.getId());
+                            ref.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()){
+                                        DocumentReference ref = FirebaseFirestore.getInstance().collection("user")
+                                                .document(currentUser.getUid())
+                                                .collection("msg-badge-count")
+                                                .document(currentUser.getUid())
+                                                .collection(otherUser.getUid()).document(doc.getId());
+                                        ref.delete();
+                                    }
+                                }
+                            });
+                        }
+                    }
+                }
+            }
+        });
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        setOnline();
     }
 }
