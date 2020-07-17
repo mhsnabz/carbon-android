@@ -414,4 +414,29 @@ public class ChatActivity extends AppCompatActivity {
         super.onStart();
         setOnline();
     }
+    private void checkIsOnline(String uid , com.gargisoft.carbon.Helper.Callback<Boolean> isOnline){
+ 
+
+        DocumentReference ref = FirebaseFirestore.getInstance().collection("user").document(currentUser.getUid())
+                .collection("msgList")
+                .document(currentUser.getUid())
+                .collection(currentUser.getUid())
+                .document(uid);
+        ref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()){
+                        if (task.getResult().exists()){
+                            if (task.getResult().getBoolean("isOnline")){
+                                isOnline.isOnline(true);
+                            }else {
+                                isOnline.isOnline(false);
+                            }
+                        }else {
+                            isOnline.isOnline(false);
+                        }
+                    }
+            }
+        });
+    }
 }
