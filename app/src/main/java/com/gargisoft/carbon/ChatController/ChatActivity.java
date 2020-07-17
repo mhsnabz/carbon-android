@@ -246,6 +246,7 @@ public class ChatActivity extends AppCompatActivity {
                             if (doc.getType().equals(DocumentChange.Type.ADDED)){
                                 model = doc.getDocument().toObject(ConservationModel.class);
                                 msgges.add(model);
+                                msg_list.scrollToPosition(msgges.size());
 
                             }
                         }
@@ -347,6 +348,7 @@ public class ChatActivity extends AppCompatActivity {
 
             dbCurrent.set(lastMsgInfoCurrent, SetOptions.merge());
             dbOther.set(lastMsgInfoOther,SetOptions.merge());
+            setBadge(msg);
 
         }
 
@@ -428,7 +430,81 @@ public class ChatActivity extends AppCompatActivity {
                             .document(otherUser.getUid()).collection(currentUser.getUid()).document(String.valueOf(val));
                     Map<String,Object>map = new HashMap<>();
                     map.put("badge",currentUser.getUid());
-                    ref.set(map,SetOptions.merge());
+                    ref.set(map,SetOptions.merge()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()){
+                                //Firestore.firestore().collection("user")
+                                // .document(otherUser).collection("msg-badge-count").document("msg").collection("badge")
+                                //                dbb.document(val.description)
+                                CollectionReference reference = FirebaseFirestore.getInstance()
+                                        .collection("user").document(otherUser.getUid())
+                                        .collection("msg-badge-count")
+                                        .document("msg")
+                                        .collection("badge");
+                                reference.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()){
+                                            Map<String,Object> map1 = new HashMap<>();
+                                            map1.put("badge",task.getResult().getDocuments().size());
+                                        //Firestore.firestore().collection("user").document(otherUser).collection("msgList")
+                                            // .document(otherUser).collection(otherUser).document(Auth.auth().currentUser!.uid)
+                                            DocumentReference ref = FirebaseFirestore.getInstance().collection("user")
+                                                    .document(otherUser.getUid())
+                                                    .collection("msgList")
+                                                    .document(otherUser.getUid())
+                                                    .collection(otherUser.getUid()).document(currentUser.getUid());
+                                            ref.set(map1,SetOptions.merge());
+                                            Utils.sendNotificaiton(currentUser,otherUser.getUid(),"text",val,msg);
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                    });
+                }else {
+                    //  let db = Firestore.firestore().collection("user").document(otherUser).collection("msg-badge")
+                    //  .document(otherUser).collection(self.currentUser!.uid).document(val.description)
+                    long val = Calendar.getInstance().getTimeInMillis();
+                    DocumentReference ref = FirebaseFirestore.getInstance().collection("user")
+                            .document(otherUser.getUid()).collection("msg-badge")
+                            .document(otherUser.getUid()).collection(currentUser.getUid()).document(String.valueOf(val));
+                    Map<String,Object>map = new HashMap<>();
+                    map.put("badge",currentUser.getUid());
+                    ref.set(map,SetOptions.merge()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()){
+                                //Firestore.firestore().collection("user")
+                                // .document(otherUser).collection("msg-badge-count").document("msg").collection("badge")
+                                //                dbb.document(val.description)
+                                CollectionReference reference = FirebaseFirestore.getInstance()
+                                        .collection("user").document(otherUser.getUid())
+                                        .collection("msg-badge-count")
+                                        .document("msg")
+                                        .collection("badge");
+                                reference.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()){
+                                            Map<String,Object> map1 = new HashMap<>();
+                                            map1.put("badge",task.getResult().getDocuments().size());
+                                            //Firestore.firestore().collection("user").document(otherUser).collection("msgList")
+                                            // .document(otherUser).collection(otherUser).document(Auth.auth().currentUser!.uid)
+                                            DocumentReference ref = FirebaseFirestore.getInstance().collection("user")
+                                                    .document(otherUser.getUid())
+                                                    .collection("msgList")
+                                                    .document(otherUser.getUid())
+                                                    .collection(otherUser.getUid()).document(currentUser.getUid());
+                                            ref.set(map1,SetOptions.merge());
+
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                    });
                 }
             }
         });
