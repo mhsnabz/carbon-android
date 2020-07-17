@@ -50,6 +50,7 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -414,8 +415,27 @@ public class ChatActivity extends AppCompatActivity {
         super.onStart();
         setOnline();
     }
+    private void setBadge(String  msg){
+        checkIsOnline(currentUser.getUid(), new com.gargisoft.carbon.Helper.Callback<Boolean>() {
+            @Override
+            public void isOnline(Boolean bool) {
+                if (!bool){
+                    //  let db = Firestore.firestore().collection("user").document(otherUser).collection("msg-badge")
+                    //  .document(otherUser).collection(self.currentUser!.uid).document(val.description)
+                    long val = Calendar.getInstance().getTimeInMillis();
+                    DocumentReference ref = FirebaseFirestore.getInstance().collection("user")
+                            .document(otherUser.getUid()).collection("msg-badge")
+                            .document(otherUser.getUid()).collection(currentUser.getUid()).document(String.valueOf(val));
+                    Map<String,Object>map = new HashMap<>();
+                    map.put("badge",currentUser.getUid());
+                    ref.set(map,SetOptions.merge());
+                }
+            }
+        });
+    }
+
     private void checkIsOnline(String uid , com.gargisoft.carbon.Helper.Callback<Boolean> isOnline){
- 
+
 
         DocumentReference ref = FirebaseFirestore.getInstance().collection("user").document(currentUser.getUid())
                 .collection("msgList")
