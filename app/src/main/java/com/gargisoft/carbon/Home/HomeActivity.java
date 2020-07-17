@@ -27,6 +27,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.MetadataChanges;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -48,6 +49,7 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FirebaseMessaging.getInstance().setAutoInitEnabled(true);
         setContentView(R.layout.activity_home);
         profileImage = (CircleImageView)findViewById(R.id.profileImage);
         username = (TextView)findViewById(R.id.username);

@@ -4,11 +4,18 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.Manifest;
 import android.animation.Animator;
+import android.app.Dialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.transition.Slide;
@@ -31,9 +38,13 @@ import com.gargisoft.carbon.Model.currentUser;
 import com.gargisoft.carbon.Model.discoverUser;
 import com.gargisoft.carbon.R;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.Timestamp;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
@@ -46,9 +57,18 @@ import com.google.firebase.firestore.MetadataChanges;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.StorageTask;
+import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -56,6 +76,7 @@ import java.util.List;
 import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import id.zelory.compressor.Compressor;
 
 public class ChatActivity extends AppCompatActivity {
     private Boolean isShow = false, isRecording = false;
@@ -70,6 +91,15 @@ public class ChatActivity extends AppCompatActivity {
     RecyclerView msg_list;
     ChatAdapter adapter;
     TextInputEditText msgText;
+    Uri selectedImage;
+    String cameraPermission[];
+    String storagePermission[];
+    private StorageReference dataStorage;
+    StorageTask<UploadTask.TaskSnapshot> storageTask;
+    private static final int gallery_request =400;
+    private static final int image_pick_request =600;
+
+    private static final int camera_pick_request =800;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -232,6 +262,126 @@ public class ChatActivity extends AppCompatActivity {
         msg_list.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         msgText = (TextInputEditText)findViewById(R.id.msgText);
         getMsg();
+
+
+        image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                uploadProfileImage();
+            }
+        });
+    }
+
+    private boolean checkGalleryPermissions(){
+
+        boolean result = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == (PackageManager.PERMISSION_GRANTED);
+        return result;
+    }
+    private void requestStoragePermission()
+    {
+        ActivityCompat.requestPermissions(this,storagePermission,gallery_request);
+
+    }
+
+    private void uploadProfileImage() {
+        if (!checkGalleryPermissions()){
+            requestStoragePermission();
+        }
+        else{ pickGallery();}
+    }
+    private void pickGallery()
+    {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("image/*");
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        intent.addCategory(intent.CATEGORY_OPENABLE);
+        //  Intent intent = new Intent(Intent.ACTION_PICK);
+        // intent.setType("*/*");
+        startActivityForResult(intent,image_pick_request);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (resultCode == RESULT_OK){
+            if(requestCode==image_pick_request){
+                CropImage.activity(data.getData())
+                        .setGuidelines(CropImageView.Guidelines.ON)
+                        .setAspectRatio(1,1)
+                        .setMinCropWindowSize(720 ,720)
+                        .start(this);
+            }
+            if (requestCode==camera_pick_request){
+                CropImage.activity(selectedImage)
+
+                        .setGuidelines(CropImageView.Guidelines.ON)
+                        .setAspectRatio(1,1)
+                        .setMinCropWindowSize(500, 500)
+                        .start(this);
+
+            }
+        }
+        if (requestCode==CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE){
+            CropImage.ActivityResult result =CropImage.getActivityResult(data);
+            if (resultCode == RESULT_OK){
+                Uri resultUri = result.getUri();
+                File thumb_filePath = new File(resultUri.getPath());
+                try {
+                    Bitmap thumb_bitmap= new Compressor(this)
+                            .setMaxHeight(256)
+                            .setMaxWidth(256)
+                            .setQuality(75)
+                            .compressToBitmap(thumb_filePath);
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+                    thumb_bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                    String fileName = "profileImage" + String.valueOf(Calendar.getInstance().getTimeInMillis());
+                    final StorageReference filePath = dataStorage.child("msgImage").child(fileName+".jpg");
+                    storageTask = filePath.putFile(resultUri)
+                            .addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                               if (task.isSuccessful()){
+                                   filePath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                       @Override
+                                       public void onSuccess(Uri uri) {
+                                            final String downUrl = uri.toString();
+                                           Log.d("msgImage", "onSuccess: "+downUrl);
+                                       }
+                                   });
+                               }
+                                }
+                            }).addOnFailureListener(new OnFailureListener()
+                            {
+                                @Override
+                                public void onFailure(@NonNull Exception e)
+                                {
+
+                                }
+                            }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                                @Override
+                                public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                                        showWaitDialog(taskSnapshot.getBytesTransferred(),taskSnapshot.getTotalByteCount());
+                                }
+                            });
+
+                }catch (Exception e){
+
+                }
+            }
+        }
+
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+    Dialog dialog;
+    private void showWaitDialog(long totalProgres , long currentProgres){
+        LottieAnimationView wait;
+        dialog = new Dialog(this);
+        dialog.setContentView(R.layout.wait_dialog);
+        wait = (LottieAnimationView)dialog.findViewById(R.id.wait);
+
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
     }
 
     private void getMsg(){
@@ -416,6 +566,12 @@ public class ChatActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         setOnline();
+        storagePermission= new String[]{
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+        };
+        cameraPermission= new String[]{Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE};
+
+        dataStorage= FirebaseStorage.getInstance().getReference();
     }
     private void setBadge(String  msg){
         checkIsOnline(currentUser.getUid(), new com.gargisoft.carbon.Helper.Callback<Boolean>() {

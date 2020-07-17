@@ -9,7 +9,7 @@
 
 
 <com.airbnb.lottie.LottieAnimationView
-
+    android:id="@+id/wait"
     android:layout_width="100dp"
     android:layout_height="100dp"
     app:lottie_rawRes="@raw/a"
